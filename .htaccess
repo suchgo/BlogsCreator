@@ -1,0 +1,32 @@
+RewriteEngine on
+
+#Сжимаем элементы с помощью mod_deflate
+<ifmodule mod_deflate.c="">
+
+SetOutputFilter DEFLATE
+Header append Vary User-Agent
+
+
+</ifmodule>
+
+#Усиливаем кеширование
+FileETag MTime Size
+<ifmodule mod_expires.c>
+<filesmatch ".(jpg|gif|png|css|js)$">
+ExpiresActive on
+ExpiresDefault "access plus 1 year"
+</filesmatch>
+</ifmodule>
+
+#Сжимаем компоненты сайта путем включения Gzip
+# сжатие text, html, javascript, css, xml:
+<ifModule mod_deflate.c>
+AddOutputFilterByType DEFLATE text/html text/plain text/xml application/xml application/xhtml+xml text/css text/javascript application/javascript application/x-javascript
+</ifModule>
+
+ErrorDocument 404 /404.php
+
+RewriteRule ^(.php)?$ index.php  [L,QSA]
+RewriteRule ^post(.php)?$ post.php  [L,QSA]
+RewriteRule ^edit-post(.php)?$ edit-post.php  [L,QSA]
+RewriteRule ^add-post(.php)?$ add-post.php  [L,QSA]
